@@ -1,0 +1,29 @@
+services:
+
+  minio:
+    image: minio/minio
+    container_name: cloud-minio
+
+    volumes:
+      - ./data1:/data1
+      - ./data2:/data2
+      - ./data3:/data3
+      - ./data4:/data4
+
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+
+    command: server /data{1...4} --console-address ":9001"
+
+  mc:
+    image: minio/mc
+    container_name: cloud-mc
+    depends_on:
+      - minio
+    entrypoint: /bin/sh
+    tty: true
